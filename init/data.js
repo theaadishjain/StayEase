@@ -5,7 +5,7 @@ const sampleListings = [
       "Escape to this charming beachfront cottage for a relaxing getaway. Enjoy stunning ocean views and easy access to the beach.",
     image: {
       filename: "listingimage",
-      url: "https://source.unsplash.com/800x600/?beach,cottage",
+      url: "https://picsum.photos/seed/beach1/800/600",
     },
     price: 1500,
     location: "Malibu",
@@ -17,7 +17,7 @@ const sampleListings = [
       "Stay in the heart of the city in this stylish loft apartment. Perfect for urban explorers!",
     image: {
       filename: "listingimage",
-      url: "https://source.unsplash.com/800x600/?city,loft",
+      url: "https://picsum.photos/seed/city1/800/600",
     },
     price: 1200,
     location: "New York City",
@@ -29,7 +29,7 @@ const sampleListings = [
       "Unplug and unwind in this peaceful mountain cabin. Surrounded by nature, it's a perfect place to recharge.",
     image: {
       filename: "listingimage",
-      url: "https://source.unsplash.com/800x600/?mountain,cabin",
+      url: "https://picsum.photos/seed/mountain1/800/600",
     },
     price: 1000,
     location: "Aspen",
@@ -41,7 +41,7 @@ const sampleListings = [
       "Experience the charm of Tuscany in this beautifully restored villa. Explore the rolling hills and vineyards.",
     image: {
       filename: "listingimage",
-      url: "https://source.unsplash.com/800x600/?villa,tuscany",
+      url: "https://picsum.photos/seed/villa1/800/600",
     },
     price: 2500,
     location: "Florence",
@@ -53,7 +53,7 @@ const sampleListings = [
       "Live among the treetops in this unique treehouse retreat. A true nature lover's paradise.",
     image: {
       filename: "listingimage",
-      url: "https://source.unsplash.com/800x600/?treehouse,forest",
+      url: "https://picsum.photos/seed/treehouse1/800/600",
     },
     price: 800,
     location: "Portland",
@@ -65,7 +65,7 @@ const sampleListings = [
       "Step out of your door onto the sandy beach. This beachfront condo offers the ultimate relaxation.",
     image: {
       filename: "listingimage",
-      url: "https://source.unsplash.com/800x600/?beach,condo",
+      url: "https://picsum.photos/seed/beach2/800/600",
     },
     price: 2000,
     location: "Cancun",
@@ -77,7 +77,7 @@ const sampleListings = [
       "Spend your days fishing and kayaking on the serene lake. This cozy cabin is perfect for outdoor enthusiasts.",
     image: {
       filename: "listingimage",
-      url: "https://source.unsplash.com/800x600/?lake,cabin",
+      url: "https://picsum.photos/seed/lake1/800/600",
     },
     price: 900,
     location: "Lake Tahoe",
@@ -89,7 +89,7 @@ const sampleListings = [
       "Indulge in luxury living with panoramic city views from this stunning penthouse apartment.",
     image: {
       filename: "listingimage",
-      url: "https://source.unsplash.com/800x600/?penthouse,city",
+      url: "https://picsum.photos/seed/penthouse1/800/600",
     },
     price: 3500,
     location: "Los Angeles",
@@ -101,7 +101,7 @@ const sampleListings = [
       "Hit the slopes right from your doorstep in this ski-in/ski-out chalet in the Swiss Alps.",
     image: {
       filename: "listingimage",
-      url: "https://source.unsplash.com/800x600/?ski,chalet",
+      url: "https://picsum.photos/seed/ski1/800/600",
     },
     price: 3000,
     location: "Verbier",
@@ -113,7 +113,7 @@ const sampleListings = [
       "Experience the thrill of the wild in a comfortable safari lodge. Witness the Great Migration up close.",
     image: {
       filename: "listingimage",
-      url: "https://source.unsplash.com/800x600/?safari,lodge",
+      url: "https://picsum.photos/seed/safari1/800/600",
     },
     price: 4000,
     location: "Serengeti National Park",
@@ -125,7 +125,7 @@ const sampleListings = [
       "Stay in a piece of history in this beautifully preserved canal house in Amsterdam's iconic district.",
     image: {
       filename: "listingimage",
-      url: "https://source.unsplash.com/800x600/?canal,house",
+      url: "https://picsum.photos/seed/canal1/800/600",
     },
     price: 1800,
     location: "Amsterdam",
@@ -137,7 +137,7 @@ const sampleListings = [
       "Have an entire island to yourself for a truly exclusive and unforgettable vacation experience.",
     image: {
       filename: "listingimage",
-      url: "https://source.unsplash.com/800x600/?private,island",
+      url: "https://picsum.photos/seed/island1/800/600",
     },
     price: 10000,
     location: "Fiji",
@@ -149,7 +149,7 @@ const sampleListings = [
       "Escape to the picturesque Cotswolds in this quaint and charming cottage with a thatched roof.",
     image: {
       filename: "listingimage",
-      url: "https://source.unsplash.com/800x600/?cottage,england",
+      url: "https://picsum.photos/seed/cottage1/800/600",
     },
     price: 1200,
     location: "Cotswolds",
@@ -161,7 +161,7 @@ const sampleListings = [
       "Step back in time in this elegant historic brownstone located in the heart of Boston.",
     image: {
       filename: "listingimage",
-      url: "https://source.unsplash.com/800x600/?brownstone,boston",
+      url: "https://picsum.photos/seed/boston1/800/600",
     },
     price: 2200,
     location: "Boston",
@@ -173,7 +173,7 @@ const sampleListings = [
       "Relax on the sandy shores of Bali in this beautiful beachfront bungalow with a private pool.",
     image: {
       filename: "listingimage",
-      url: "https://source.unsplash.com/800x600/?bali,bungalow",
+      url: "https://picsum.photos/seed/bali1/800/600",
     },
     price: 1800,
     location: "Bali",
@@ -185,7 +185,7 @@ const sampleListings = [
       "Enjoy breathtaking mountain views from this cozy cabin in the Canadian Rockies.",
     image: {
       filename: "listingimage",
-      url: "https://source.unsplash.com/800x600/?banff,cabin",
+      url: "https://picsum.photos/seed/banff1/800/600",
     },
     price: 1500,
     location: "Banff",
@@ -197,7 +197,7 @@ const sampleListings = [
       "Step into the glamour of the 1920s in this stylish Art Deco apartment in South Beach.",
     image: {
       filename: "listingimage",
-      url: "https://source.unsplash.com/800x600/?miami,apartment",
+      url: "https://picsum.photos/seed/miami1/800/600",
     },
     price: 1600,
     location: "Miami",
@@ -209,7 +209,7 @@ const sampleListings = [
       "Escape to a tropical paradise in this luxurious villa with a private infinity pool in Phuket.",
     image: {
       filename: "listingimage",
-      url: "https://source.unsplash.com/800x600/?phuket,villa",
+      url: "https://picsum.photos/seed/phuket1/800/600",
     },
     price: 3000,
     location: "Phuket",
@@ -221,7 +221,7 @@ const sampleListings = [
       "Live like royalty in this historic castle in the Scottish Highlands. Explore the rugged beauty of the area.",
     image: {
       filename: "listingimage",
-      url: "https://source.unsplash.com/800x600/?scotland,castle",
+      url: "https://picsum.photos/seed/scotland1/800/600",
     },
     price: 4000,
     location: "Scottish Highlands",
@@ -233,7 +233,7 @@ const sampleListings = [
       "Experience luxury in the middle of the desert in this opulent oasis in Dubai with a private pool.",
     image: {
       filename: "listingimage",
-      url: "https://source.unsplash.com/800x600/?dubai,luxury",
+      url: "https://picsum.photos/seed/dubai1/800/600",
     },
     price: 5000,
     location: "Dubai",
