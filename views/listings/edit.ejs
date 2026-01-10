@@ -5,7 +5,7 @@
 
     <h3>Edit your Listing</h3>
 
-    <form method="POST" action="/listings/<%= listing._id %>?_method=PUT">
+    <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate class="needs-validation">
 
       <div class="mb-3">
         <label for="title" class="form-label">Title</label>
@@ -17,6 +17,7 @@
           class="form-control"
           required
         />
+    <div class="invalid-feedback">Please enter a valid Title</div>
       </div>
 
       <div class="mb-3">
@@ -26,7 +27,8 @@
           name="listing[description]"
           class="form-control"
           required
-        ><%= listing.description %></textarea>
+        ><%= listing.description %> </textarea>
+    <div class="invalid-feedback">Please enter a valid Description</div>
       </div>
 
       <div class="mb-3">
@@ -37,7 +39,9 @@
           value="<%= listing.image.url %>"
           type="text"
           class="form-control"
+          required
         />
+    <div class="invalid-feedback">Please enter a valid Image Link</div>
       </div>
 
       <div class="row">
@@ -51,6 +55,8 @@
             class="form-control"
             required
           />
+    <div class="invalid-feedback">Please enter a valid Price</div>
+
         </div>
 
         <div class="mb-3 col-md-8">
@@ -63,6 +69,8 @@
             class="form-control"
             required
           />
+    <div class="invalid-feedback">Please enter a valid Country</div>
+
         </div>
       </div>
 
@@ -76,6 +84,8 @@
           class="form-control"
           required
         />
+    <div class="invalid-feedback">Please enter a valid Location</div>
+
       </div>
 
       <button class="btn btn-dark edit-btn mt-3">Edit</button>
@@ -84,3 +94,4 @@
 
   </div>
 </div>
+<script src="/js/script.js"></script>

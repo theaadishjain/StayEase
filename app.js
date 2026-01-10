@@ -5,6 +5,7 @@ const Listing = require("./models/listing.js");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate=require("ejs-mate");
+const wrapAsync= require("./utils/wrapAsync.js");
 
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/StayEase";
@@ -45,11 +46,11 @@ app.get("/listings/new", (req, res) => {
 
 // CREATE ROUTE
 
-app.post("/listings", async (req, res) => {
+app.post("/listings", wrapAsync(async(req, res,next) => {
     const newListing = new Listing(req.body.listing);
     await newListing.save();
     res.redirect("/listings");
-});
+}));
 
 // SHOW ROUTE
 
@@ -88,6 +89,10 @@ app.delete("/listings/:id", async (req, res) => {
     await Listing.findByIdAndDelete(id);
     res.redirect("/listings");
 });
+//MIDDLEWARE
+app.use((err,req,res,next)=>{
+    res.send("Something went Wrong!");
+})
 
 // Server
 app.listen(8080, () => {
