@@ -144,6 +144,19 @@ app.post("/listings/:id/reviews", validateReview, wrapAsync(async (req, res) => 
     res.redirect(`/listings/${listing._id}`);
 }));
 
+// Delete Review Route
+app.delete(
+    "/listings/:id/reviews/:reviewId",
+    wrapAsync(async(req,res)=>{
+        let {id,reviewId}= req.params;
+
+        await Listing.findByIdAndUpdate(id,{$pull: {review:reviewId}});
+        await Review.findByIdAndDelete(reviewId);
+
+        res.redirect(`/listings/${id}`);
+    })
+);
+
 
 // 404 handler
 app.use((req, res, next) => {
