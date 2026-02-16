@@ -12,7 +12,7 @@ const Review = require("./models/review.js");
 
 
 // DATABASE CONNECTION
-const MONGO_URL = "mongodb://127.0.0.1:27017/StayEase";
+const MONGO_URL = process.env.MONGO_URL || "mongodb://127.0.0.1:27017/StayEase";
 
 async function main() {
     await mongoose.connect(MONGO_URL);
@@ -35,6 +35,15 @@ app.use(express.static(path.join(__dirname, "public")));
 // ROOT
 app.get("/", (req, res) => {
     res.redirect("/listings");
+});
+
+// STATIC PAGES
+app.get("/privacy", (req, res) => {
+    res.render("privacy.ejs");
+});
+
+app.get("/terms", (req, res) => {
+    res.render("terms.ejs");
 });
 
 
@@ -76,7 +85,14 @@ app.get("/listings/new", (req, res) => {
 
 // CREATE
 app.post("/listings", validateListing, wrapAsync(async (req, res) => {
-    const newListing = new Listing(req.body.listing);
+    const listingData = req.body.listing || {};
+
+    // Normalize image field to match Mongoose schema (image.url)
+    if (typeof listingData.image === "string") {
+        listingData.image = { url: listingData.image };
+    }
+
+    const newListing = new Listing(listingData);
     await newListing.save();
     res.redirect("/listings");
 }));
@@ -104,9 +120,16 @@ app.get("/listings/:id/edit", wrapAsync(async (req, res) => {
 // UPDATE
 app.put("/listings/:id", validateListing, wrapAsync(async (req, res) => {
     const { id } = req.params;
+    const listingData = req.body.listing || {};
+
+    // Normalize image field to match Mongoose schema (image.url)
+    if (typeof listingData.image === "string") {
+        listingData.image = { url: listingData.image };
+    }
+
     const listing = await Listing.findByIdAndUpdate(
         id,
-        req.body.listing,
+        listingData,
         { new: true }
     );
     if (!listing) {
@@ -150,7 +173,7 @@ app.delete(
     wrapAsync(async(req,res)=>{
         let {id,reviewId}= req.params;
 
-        await Listing.findByIdAndUpdate(id,{$pull: {review:reviewId}});
+        await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
         await Review.findByIdAndDelete(reviewId);
 
         res.redirect(`/listings/${id}`);
@@ -170,6 +193,7 @@ app.use((err, req, res, next) => {
 });
 
 // SERVER
-app.listen(8080, () => {
-    console.log("Server running on port 8080");
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
