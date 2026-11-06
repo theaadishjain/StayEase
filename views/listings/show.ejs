@@ -23,12 +23,16 @@
           <%= listing.location %><br>
           <%= listing.country %>
         </p>
+        <% if (listing.owner) { %>
+          <p class="card-text"><i>Hosted by <%= listing.owner.username %></i></p>
+        <% } %>
       </div>
 
     </div>
   </div>
 </div>
 
+<% if (currUser && listing.owner && listing.owner._id.equals(currUser._id)) { %>
 <div class="row mt-3">
   <div class="col-6 offset-3 d-flex gap-2">
 
@@ -42,6 +46,7 @@
 
   </div>
 </div>
+<% } %>
 
 <!-- REVIEW SECTION -->
 
@@ -49,6 +54,7 @@
   <div class="col-8 offset-2">
 
     <hr />
+    <% if (currUser) { %>
     <h4>Leave a Review</h4>
 
     <form action="/listings/<%= listing._id %>/reviews" 
@@ -83,6 +89,10 @@
     </form>
 
     <hr />
+    <% } else { %>
+    <p><a href="/login">Log in</a> to leave a review.</p>
+    <hr />
+    <% } %>
     <h5><b>All Reviews</b></h5>
 
     <% if (listing.reviews.length > 0) { %>
@@ -95,14 +105,16 @@
           <div class="col-md-5">
             <div class="card h-100 shadow-sm">
               <div class="card-body">
-                <h6 class="card-title">Guest</h6>
+                <h6 class="card-title"><%= review.author ? review.author.username : "Guest" %></h6>
                 <p class="card-text"><%= review.comment %></p>
                 <p class="card-text">
                   <strong><%= review.rating %></strong> ⭐
                 </p>
+              <% if (currUser && review.author && review.author._id.equals(currUser._id)) { %>
               <form class="mb-3" method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
               <button class="btn btn-sm btn-dark">Delete</button>
               </form>
+              <% } %>
               </div>
             </div>
           </div>

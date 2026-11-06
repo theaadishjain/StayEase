@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== "production") {
+    require("dotenv").config();
+}
+
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -9,6 +13,19 @@ const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
 const { listingSchema, reviewSchema } = require("./schema.js");
 const Review = require("./models/review.js");
+const session = require("express-session");
+const flash = require("connect-flash");
+const passport = require("passport");
+const User = require("./models/user.js");
+const userRouter = require("./routes/user.js");
+const { isLoggedIn, isOwner, isReviewAuthor } = require("./middleware.js");
+
+// SESSION SECRET
+const SECRET = process.env.SECRET;
+if (!SECRET && process.env.NODE_ENV === "production") {
+    console.error("SECRET environment variable is required in production.");
+    process.exit(1);
+}
 
 
 // DATABASE CONNECTION
@@ -32,6 +49,35 @@ app.use(express.json());
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
+const sessionOptions = {
+    secret: SECRET || "dev-only-secret-change-me",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+    },
+};
+
+app.use(session(sessionOptions));
+app.use(flash());
+
+// AUTH
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+// Make flash messages and the current user available in every view
+app.use((req, res, next) => {
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    res.locals.currUser = req.user;
+    next();
+});
+
+app.use("/", userRouter);
 // ROOT
 app.get("/", (req, res) => {
     res.redirect("/listings");
@@ -79,12 +125,12 @@ app.get("/listings", wrapAsync(async (req, res) => {
 }));
 
 // NEW
-app.get("/listings/new", (req, res) => {
+app.get("/listings/new", isLoggedIn, (req, res) => {
     res.render("listings/new.ejs");
 });
 
 // CREATE
-app.post("/listings", validateListing, wrapAsync(async (req, res) => {
+app.post("/listings", isLoggedIn, validateListing, wrapAsync(async (req, res) => {
     const listingData = req.body.listing || {};
 
     // Normalize image field to match Mongoose schema (image.url)
@@ -93,14 +139,18 @@ app.post("/listings", validateListing, wrapAsync(async (req, res) => {
     }
 
     const newListing = new Listing(listingData);
+    newListing.owner = req.user._id;
     await newListing.save();
+    req.flash("success", "New listing created!");
     res.redirect("/listings");
 }));
 
 // SHOW
 app.get("/listings/:id", wrapAsync(async (req, res) => {
     const { id } = req.params;
-    const listing = await Listing.findById(id).populate("reviews");
+    const listing = await Listing.findById(id)
+        .populate({ path: "reviews", populate: { path: "author" } })
+        .populate("owner");
     if (!listing) {
         throw new ExpressError(404, "Listing not found");
     }
@@ -108,7 +158,7 @@ app.get("/listings/:id", wrapAsync(async (req, res) => {
 }));
 
 // EDIT
-app.get("/listings/:id/edit", wrapAsync(async (req, res) => {
+app.get("/listings/:id/edit", isLoggedIn, wrapAsync(isOwner), wrapAsync(async (req, res) => {
     const { id } = req.params;
     const listing = await Listing.findById(id);
     if (!listing) {
@@ -118,7 +168,7 @@ app.get("/listings/:id/edit", wrapAsync(async (req, res) => {
 }));
 
 // UPDATE
-app.put("/listings/:id", validateListing, wrapAsync(async (req, res) => {
+app.put("/listings/:id", isLoggedIn, wrapAsync(isOwner), validateListing, wrapAsync(async (req, res) => {
     const { id } = req.params;
     const listingData = req.body.listing || {};
 
@@ -135,46 +185,52 @@ app.put("/listings/:id", validateListing, wrapAsync(async (req, res) => {
     if (!listing) {
         throw new ExpressError(404, "Listing not found");
     }
+    req.flash("success", "Listing updated!");
     res.redirect(`/listings/${id}`);
 }));
 
 // DELETE
-app.delete("/listings/:id", wrapAsync(async (req, res) => {
+app.delete("/listings/:id", isLoggedIn, wrapAsync(isOwner), wrapAsync(async (req, res) => {
     const { id } = req.params;
     const listing = await Listing.findByIdAndDelete(id);
     if (!listing) {
         throw new ExpressError(404, "Listing not found");
     }
+    req.flash("success", "Listing deleted.");
     res.redirect("/listings");
 }));
 
 
 // ---------------- REVIEW ROUTE ----------------
 
-app.post("/listings/:id/reviews", validateReview, wrapAsync(async (req, res) => {
+app.post("/listings/:id/reviews", isLoggedIn, validateReview, wrapAsync(async (req, res) => {
     let listing = await Listing.findById(req.params.id);
     if (!listing) {
         throw new ExpressError(404, "Listing not found");
     }
 
     let newReview = new Review(req.body.review);
+    newReview.author = req.user._id;
 
     listing.reviews.push(newReview);
     await newReview.save();
     await listing.save();
 
-    console.log("new review saved");
+    req.flash("success", "Review added!");
     res.redirect(`/listings/${listing._id}`);
 }));
 
 // Delete Review Route
 app.delete(
     "/listings/:id/reviews/:reviewId",
+    isLoggedIn,
+    wrapAsync(isReviewAuthor),
     wrapAsync(async(req,res)=>{
         let {id,reviewId}= req.params;
 
         await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
         await Review.findByIdAndDelete(reviewId);
+        req.flash("success", "Review deleted.");
 
         res.redirect(`/listings/${id}`);
     })
@@ -189,6 +245,10 @@ app.use((req, res, next) => {
 // Error handler
 app.use((err, req, res, next) => {
     const { statusCode = 500, message = "Something went wrong!" } = err;
+    // Defaults in case the error happened before the locals middleware ran
+    res.locals.success = res.locals.success || [];
+    res.locals.error = res.locals.error || [];
+    res.locals.currUser = res.locals.currUser || req.user;
     res.status(statusCode).render("error.ejs", { message });
 });
 
