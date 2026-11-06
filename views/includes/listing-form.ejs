@@ -1,0 +1,68 @@
+<%#
+  Shared create/edit form.
+  Expects: action (form URL), submitLabel, listing (null when creating), imageRequired
+%>
+<% const l = listing || {}; const imgUrl = l.image ? l.image.url : ""; %>
+<form method="POST" action="<%= action %>" novalidate class="needs-validation form-card">
+  <div class="mb-3">
+    <label for="title" class="form-label">Title</label>
+    <input id="title" name="listing[title]" value="<%= l.title || '' %>" type="text"
+           class="form-control" placeholder="e.g. Cozy beachfront cottage" required>
+    <div class="invalid-feedback">Please enter a title</div>
+  </div>
+
+  <div class="mb-3">
+    <label for="description" class="form-label">Description</label>
+    <textarea id="description" name="listing[description]" rows="4" class="form-control"
+              placeholder="What makes your place special?" required><%= l.description || '' %></textarea>
+    <div class="invalid-feedback">Please add a short description</div>
+  </div>
+
+  <div class="mb-3">
+    <label for="image" class="form-label">Image link</label>
+    <input id="image" name="listing[image]" value="<%= imgUrl %>" type="url"
+           class="form-control" placeholder="https://…" <%= imageRequired ? "required" : "" %>
+           data-preview="#imagePreview">
+    <% if (!imageRequired) { %>
+      <div class="form-text">Optional. Leave blank to use a default photo.</div>
+    <% } %>
+    <div class="invalid-feedback">Please enter a valid image link</div>
+    <div class="img-preview mt-2" id="imagePreview">
+      <% if (imgUrl) { %>
+        <img src="<%= imgUrl %>" alt="Listing photo preview">
+      <% } else { %>
+        <span><i class="fa-regular fa-image me-1" aria-hidden="true"></i> Photo preview</span>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-3">
+    <div class="col-md-4">
+      <label for="price" class="form-label">Price per night</label>
+      <div class="input-group has-validation">
+        <span class="input-group-text">&#8377;</span>
+        <input id="price" name="listing[price]" value="<%= l.price ?? '' %>" type="number" min="0"
+               class="form-control" placeholder="1500" required>
+        <div class="invalid-feedback">Please enter a valid price</div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <label for="country" class="form-label">Country</label>
+      <input id="country" name="listing[country]" value="<%= l.country || '' %>" type="text"
+             class="form-control" placeholder="e.g. India" required>
+      <div class="invalid-feedback">Please enter the country</div>
+    </div>
+  </div>
+
+  <div class="mb-4">
+    <label for="location" class="form-label">Location</label>
+    <input id="location" name="listing[location]" value="<%= l.location || '' %>" type="text"
+           class="form-control" placeholder="City or area, e.g. Goa" required>
+    <div class="invalid-feedback">Please enter the location</div>
+  </div>
+
+  <div class="d-flex flex-wrap gap-2 justify-content-end">
+    <a href="<%= listing ? '/listings/' + listing._id : '/listings' %>" class="btn btn-outline-soft">Cancel</a>
+    <button class="btn btn-brand"><%= submitLabel %></button>
+  </div>
+</form>

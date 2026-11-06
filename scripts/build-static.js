@@ -87,10 +87,10 @@ async function build() {
     fs.rmSync(OUT, { recursive: true, force: true });
     fs.cpSync(path.join(ROOT, "public"), OUT, { recursive: true });
 
-    const indexHtml = await render("listings/index", { allListing: listings });
+    const indexHtml = await render("listings/index", { allListing: listings, currPath: "/listings" });
     write("/", indexHtml);
     write("/listings", indexHtml);
-    write("/listings/new", await render("listings/new", {}));
+    write("/listings/new", await render("listings/new", { currPath: "/listings/new" }));
 
     for (const listing of listings) {
         write(`/listings/${listing._id}`, await render("listings/show", { listing }));

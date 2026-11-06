@@ -1,23 +1,44 @@
-<nav class="navbar navbar-expand-lg bg-body-light border-bottom sticky-top">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="/"><i class="fa-regular fa-compass"></i></a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" >
-      <span class="navbar-toggler-icon"></span>
+<% const path = locals.currPath || ""; %>
+<nav class="navbar navbar-expand-lg site-nav sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="/listings">
+      <i class="fa-regular fa-compass" aria-hidden="true"></i>
+      StayEase
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+            aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="fa-solid fa-bars"></i>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-link"  href="/">Home</a>
-        <a class="nav-link" href="/listings">All Listings</a>
-        <a class="nav-link" href="/listings/new">Add new Listing</a>
+
+    <div class="collapse navbar-collapse" id="mainNav">
+      <div class="navbar-nav ms-lg-4">
+        <a class="nav-link <%= path === '/listings' ? 'active' : '' %>"
+           <%- path === '/listings' ? 'aria-current="page"' : '' %> href="/listings">Explore</a>
+        <a class="nav-link <%= path === '/listings/new' ? 'active' : '' %>"
+           <%- path === '/listings/new' ? 'aria-current="page"' : '' %> href="/listings/new">Become a host</a>
       </div>
-      <div class="navbar-nav ms-auto">
+
+      <div class="navbar-nav ms-auto align-items-lg-center gap-lg-2 mt-2 mt-lg-0">
         <% if (!currUser) { %>
-          <a class="nav-link" href="/signup"><b>Sign up</b></a>
-          <a class="nav-link" href="/login"><b>Log in</b></a>
+          <a class="nav-link" href="/login">Log in</a>
+          <a class="btn btn-brand ms-lg-1 mt-2 mt-lg-0" href="/signup">Sign up</a>
         <% } else { %>
-          <form method="POST" action="/logout" class="d-inline">
-            <button class="nav-link btn btn-link"><b>Log out</b></button>
-          </form>
+          <div class="dropdown">
+            <button class="user-chip" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <%= currUser.username %>
+              <span class="avatar" aria-hidden="true"><%= currUser.username.charAt(0) %></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-lg-end">
+              <li><a class="dropdown-item" href="/listings/new"><i class="fa-solid fa-plus me-2"></i>Add a listing</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <form method="POST" action="/logout">
+                  <button class="dropdown-item"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i>Log out</button>
+                </form>
+              </li>
+            </ul>
+          </div>
         <% } %>
       </div>
     </div>

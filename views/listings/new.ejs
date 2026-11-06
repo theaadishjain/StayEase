@@ -1,93 +1,16 @@
 <% layout("layouts/boilerplate") %>
-<div class="row">
-<div class="col-8 offset-2">
-<br></br>
-<h3>Create a New Listing</h3>
+<% block("title", "Add a listing") %>
 
-<form method="POST" action="/listings" novalidate class="needs-validation">
+<div class="form-shell">
+  <header class="page-header">
+    <h1>Share your place</h1>
+    <p>Tell travellers about your space. You can edit these details any time.</p>
+  </header>
 
-  <div class="mb-3">
-    <label for="title" class="form-label">Title</label>
-    <input 
-      id="title"
-      name="listing[title]" 
-      placeholder="Enter title" 
-      type="text" 
-      class="form-control"
-      required
-    />
-    <div class="invalid-feedback">Please enter a valid Title</div>
-  </div>
-
-  <div class="mb-3">
-    <label for="description" class="form-label">Description</label>
-    <textarea 
-      id="description"
-      name="listing[description]"  
-      class="form-control"
-      required
-    ></textarea>
-    <div class="invalid-feedback">Please enter a short description</div>
-
-  </div>
-
-  <div class="mb-3">
-    <label for="image" class="form-label">Image Link</label>
-    <input 
-      id="image"
-      name="listing[image]" 
-      placeholder="Enter image URL" 
-      type="text" 
-      class="form-control"
-    />
-  </div>
-  <div class="row">
- <div class="mb-3 col-md-4">
-    <label for="price" class="form-label">Price</label>
-    <input 
-      id="price"
-      name="listing[price]" 
-      placeholder="Enter price" 
-      type="number"  
-      class="form-control"
-      required
-    />
-    <div class="invalid-feedback">Please enter a valid Price</div>
-  </div>
-
-  <div class="mb-3 col-md-8">
-    <label for="country" class="form-label">Country</label>
-    <input 
-      id="country"
-      name="listing[country]" 
-      placeholder="Enter country" 
-      type="text" 
-      class="form-control"
-      required
-    />
-    <div class="invalid-feedback">Please enter the country name</div>
-
-  </div>
-
-  </div>
-
- 
-  <div class="mb-3">
-    <label for="location" class="form-label">Location</label>
-    <input 
-      id="location"
-      name="listing[location]" 
-      placeholder="Enter location" 
-      type="text"
-      class="form-control"
-      required
-    />
-    <div class="invalid-feedback">Please enter the location</div>
-
-  </div>
-
-  <button class="btn btn-dark add-btn">Add</button>
-  <br></br>
-</form>
+  <%- include("../includes/listing-form.ejs", {
+    listing: null,
+    action: "/listings",
+    submitLabel: "Publish listing",
+    imageRequired: false
+  }) %>
 </div>
- </div>

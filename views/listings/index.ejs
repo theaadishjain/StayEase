@@ -1,33 +1,50 @@
 <% layout("layouts/boilerplate") %>
+<% block("title", "Explore stays") %>
 
-<h3>All Listings</h3>
+<header class="page-header d-flex flex-column flex-md-row align-items-md-end justify-content-between gap-3">
+  <div>
+    <h1>Find your next stay</h1>
+    <p><%= allListing.length %> <%= allListing.length === 1 ? "place" : "places" %> to stay around the world</p>
+  </div>
+  <% if (allListing.length) { %>
+    <div class="search-pill">
+      <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+      <input type="search" id="listingSearch" class="form-control"
+             placeholder="Search by name, city or country" aria-label="Search listings">
+    </div>
+  <% } %>
+</header>
 
-<div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 g-4">
-  <% for (let listing of allListing) { %>
-
-    <div class="col">
-      <a href="/listings/<%= listing._id %>" class="listing-link">
-
-        <div class="card h-100">
-          <img 
-            src="<%= listing.image.url %>" 
-            class="card-img-top"
-            alt="listing image"
-            style="height: 20rem; object-fit: cover;"
-          />
-
-          <div class="card-img-overlay"></div>
-
-          <div class="card-body">
-            <p class="card-text">
-              <b><%= listing.title %></b><br>
-              &#8377;<%= listing.price.toLocaleString("en-IN") %> / night
+<% if (allListing.length) { %>
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4" id="listingGrid">
+    <% for (let listing of allListing) { %>
+      <div class="col" data-search="<%= [listing.title, listing.location, listing.country].join(' ').toLowerCase() %>">
+        <a href="/listings/<%= listing._id %>" class="listing-card">
+          <div class="thumb">
+            <img src="<%= listing.image.url %>" alt="<%= listing.title %>" loading="lazy">
+          </div>
+          <div class="meta">
+            <h2 class="title"><%= listing.title %></h2>
+            <p class="place"><%= listing.location %>, <%= listing.country %></p>
+            <p class="price">
+              <strong>&#8377;<%= (listing.price || 0).toLocaleString("en-IN") %></strong> night
             </p>
           </div>
-        </div>
+        </a>
+      </div>
+    <% } %>
+  </div>
 
-      </a>
-    </div>
-
-  <% } %>
-</div>
+  <div class="empty-state d-none" id="noResults">
+    <i class="fa-solid fa-map-location-dot" aria-hidden="true"></i>
+    <h2>No matching stays</h2>
+    <p>Try a different city, country or listing name.</p>
+  </div>
+<% } else { %>
+  <div class="empty-state">
+    <i class="fa-solid fa-house-circle-xmark" aria-hidden="true"></i>
+    <h2>No listings yet</h2>
+    <p>Be the first to share your place with travellers.</p>
+    <a href="/listings/new" class="btn btn-brand mt-2">Add a listing</a>
+  </div>
+<% } %>
