@@ -47,11 +47,6 @@ function render(view, locals) {
     });
 }
 
-const DEMO_SNIPPET = `
-<div class="alert alert-warning text-center mb-0 rounded-0 py-2 small" role="note">
-  Static demo: you can browse everything here, but saving is turned off.
-</div>`;
-
 const DEMO_SCRIPT = `
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index:1080">
   <div id="demoToast" class="toast text-bg-dark" role="status" aria-live="polite">
@@ -71,12 +66,11 @@ const DEMO_SCRIPT = `
   }, true);
 </script>`;
 
-// Point root-relative links/assets at BASE, inject the demo banner + script
+// Point root-relative links/assets at BASE and inject the demo form script
 function postProcess(html) {
     if (BASE) {
         html = html.replace(/(href|src|action)="\/(?!\/)/g, `$1="${BASE}/`);
     }
-    html = html.replace(/<body([^>]*)>/, `<body$1>${DEMO_SNIPPET}`);
     html = html.replace(/<\/body>/, `${DEMO_SCRIPT}\n</body>`);
     return html;
 }
